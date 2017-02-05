@@ -1,0 +1,10 @@
+<resources>
+    <!-- your theme inherits from the material theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        Theme.AppCompat.Light.NoActionBar
+
+        <!--android:Theme.Material.NoActionBar-->
+        <!-- theme customizations -->
+    </style>
+</resources>
