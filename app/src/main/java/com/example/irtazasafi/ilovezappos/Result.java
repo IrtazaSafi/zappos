@@ -112,6 +112,7 @@ public class Result {
     }
 
     public String getProductName() {
+
         return productName;
     }
 

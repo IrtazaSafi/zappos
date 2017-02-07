@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,8 +46,9 @@ public class MainActivity extends Activity implements Callback<QueryResult> {
 
     public void search(View v){
 
-        Intent intent = new Intent(this,ProductPage.class);
-        startActivity(intent);
+       EditText query = (EditText)findViewById(R.id.searchQuery);
+        makeRequest(query.getText().toString());
+
     }
 
     public void makeRequest(String searchTerm){
@@ -60,8 +62,12 @@ public class MainActivity extends Activity implements Callback<QueryResult> {
 
             QueryResult resp = response.body();
             Result first = resp.getResults().get(0);
+            SharedData sharedData = (SharedData)getApplicationContext();
+            sharedData.setFirstResult(first);
 
-            System.out.println(first.getBrandName() + " " + first.getThumbnailImageUrl() + " " + first.getProductName());
+            startActivity(new Intent(this,ProductPage.class));
+
+            //System.out.println(first.getBrandName() + " " + first.getThumbnailImageUrl() + " " + first.getProductName());
 
         } else {
             System.out.println("FAIL");
