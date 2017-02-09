@@ -14,6 +14,8 @@ public class SharedData extends Application {
         return firstResult;
     }
 
+    String searchTerm;
+
     void setFirstResult(Result _result){
         firstResult = _result;
     }

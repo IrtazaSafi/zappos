@@ -1,5 +1,9 @@
 package com.example.irtazasafi.ilovezappos;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -22,6 +26,8 @@ import com.google.gson.Gson;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.squareup.picasso.Picasso;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import static com.example.irtazasafi.ilovezappos.R.id.imageView;
 
 public class ProductPage extends Activity {
@@ -31,29 +37,23 @@ public class ProductPage extends Activity {
     TextView discountAmount;
     ImageView animobj;
     ViewGroup touchTarget;
+    Context context;
+    Result product;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_page);
-
-
-        Result product = ((SharedData)getApplicationContext()).getFirstResult();
         ActivityProductPageBinding binding = DataBindingUtil.setContentView(this,R.layout.activity_product_page);
+        product = ((SharedData)getApplicationContext()).getFirstResult();
         binding.setProduct(product);
+
         Picasso.with(this).load(product.getThumbnailImageUrl()).into((ImageView)findViewById(R.id.productImage));
         Picasso.with(this).load(product.getThumbnailImageUrl()).into((ImageView)findViewById(R.id.animObj));
-
-
-        // product.setPercentOff("10%");
-//        System.out.println(product.getOriginalPrice());
-//        System.out.println(product.getPercentOff());
-//        System.out.println(product.getPrice());
-
 
         cartAdd = (FloatingActionButton)findViewById(R.id.cartadd);
         discountAmount= (TextView)findViewById(R.id.discountAmount);
         touchTarget = (ViewGroup)findViewById(R.id.touchTargets);
-        CoordinatorLayout disc = (CoordinatorLayout)findViewById(R.id.test);
+        context = this;
         animobj = (ImageView)findViewById(R.id.animObj);
         animobj.setVisibility(View.INVISIBLE);
         if(product.getPercentOff().equals("0%")){
@@ -66,26 +66,15 @@ public class ProductPage extends Activity {
             tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         }
-
-//        touchTarget.setOnTouchListener(
-//                new LinearLayout.OnTouchListener(){
-//
-//
-//                    @Override
-//                    public boolean onTouch(View view, MotionEvent motionEvent) {
-//                        move();
-//                        return true;
-//                    }
-//                });
-
-
-
     }
 
-    public void move(){
-        LinearLayout.LayoutParams positionRules = new LinearLayout.
-                LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-               LinearLayout.LayoutParams.WRAP_CONTENT);
+    public void shareProduct(View view){
+        String term = ((SharedData)getApplicationContext()).searchTerm;
+        String link = "http://www.linktoproduct.com/ppage?term=" + term;
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        clipboard.setText(link);
+
+        Toast.makeText(this, "Sharable link copied to your clipboard",Toast.LENGTH_SHORT).show();
 
 
     }
@@ -94,7 +83,7 @@ public class ProductPage extends Activity {
 
         animobj.setVisibility(View.VISIBLE);
         TranslateAnimation animation = new TranslateAnimation(0, -300, 0, 20);
-        animation.setDuration(1200);
+        animation.setDuration(800);
         animation.setFillAfter(false);
         animobj.startAnimation(animation);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -106,6 +95,11 @@ public class ProductPage extends Activity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 animobj.setVisibility(View.INVISIBLE);
+
+                Toast.makeText(context,
+                        ((SharedData)getApplicationContext()).getFirstResult().getProductName()
+                                + " added to cart!",Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -113,10 +107,6 @@ public class ProductPage extends Activity {
 
             }
         });
-
-
-
-
         YoYo.with(Techniques.ZoomOut)
                 .duration(200)
                 .playOn(findViewById(R.id.cartadd));
@@ -124,11 +114,22 @@ public class ProductPage extends Activity {
         YoYo.with(Techniques.ZoomIn)
                 .duration(500)
                 .playOn(findViewById(R.id.cartadd));
+    }
 
 
-//        YoYo.with(Techniques.BounceInUp)
-//                .duration(700)
-//                .playOn(findViewById(R.id.cartadd));
+    public void onBackPressed(){
+        startActivity(new Intent(this,MainActivity.class));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state){
+        // nothing needs to be saved here. Product data is in SharedData, TextViews are saved automatically.//
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        // nothing else to restore.
     }
 
 }
