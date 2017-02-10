@@ -41,6 +41,7 @@ public class user_link extends AppCompatActivity implements Callback<QueryResult
             String uri = this.getIntent().getDataString();
             Log.i("MyApp", "Deep link clicked " + uri);
             String queryParam = data.getQueryParameter("term");
+            System.out.println(queryParam);
             makeRequest(queryParam);
         }
     }

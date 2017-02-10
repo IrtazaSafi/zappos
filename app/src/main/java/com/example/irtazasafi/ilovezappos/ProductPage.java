@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.design.widget.CoordinatorLayout;
@@ -27,6 +28,9 @@ import com.readystatesoftware.viewbadger.BadgeView;
 import com.squareup.picasso.Picasso;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static com.example.irtazasafi.ilovezappos.R.id.imageView;
 
@@ -68,11 +72,13 @@ public class ProductPage extends Activity {
         }
     }
 
-    public void shareProduct(View view){
+    public void shareProduct(View view) throws URISyntaxException {
         String term = ((SharedData)getApplicationContext()).searchTerm;
         String link = "http://www.linktoproduct.com/ppage?term=" + term;
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clipboard.setText(link);
+        URI uri = new URI(link.replace(" ", "%20"));
+        clipboard.setText(uri.toString());
+
 
         Toast.makeText(this, "Sharable link copied to your clipboard",Toast.LENGTH_SHORT).show();
 

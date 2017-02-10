@@ -36,6 +36,11 @@ public class MainActivity extends Activity implements Callback<QueryResult> {
 
     public void search(View v){
        EditText query = (EditText)findViewById(R.id.searchQuery);
+        if(query.getText().toString().length() == 0){
+            Toast.makeText(getApplicationContext(), "Please enter a search query",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         makeRequest(query.getText().toString());
     }
 
