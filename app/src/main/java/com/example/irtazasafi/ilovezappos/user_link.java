@@ -74,6 +74,9 @@ public class user_link extends AppCompatActivity implements Callback<QueryResult
     }
     @Override
     public void onFailure(Call<QueryResult> call, Throwable t) {
+        Toast.makeText(getApplicationContext(), "No internet connection!", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
         t.printStackTrace();
+
     }
 }
